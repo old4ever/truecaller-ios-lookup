@@ -62,6 +62,26 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
+                    if tokenSet {
+                        Label("Token is set", systemImage: "checkmark.shield.fill")
+                            .foregroundStyle(.green)
+                    } else {
+                        Label("Token is not set", systemImage: "lock.open")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    if tokenSet {
+                        if settings.isFallbackStorage {
+                            Label("Stored in app storage — Keychain unavailable", systemImage: "exclamationmark.triangle.fill")
+                                .font(.footnote)
+                                .foregroundStyle(.orange)
+                        } else {
+                            Label("Stored in Keychain", systemImage: "checkmark.shield.fill")
+                                .font(.footnote)
+                                .foregroundStyle(.green)
+                        }
+                    }
+
                     HStack {
                         if showToken {
                             TextField("Truecaller installationId", text: $settings.token)
@@ -77,21 +97,9 @@ struct SettingsView: View {
                         }
                     }
 
-                    if settings.tokenIsSaved && !settings.token.isEmpty {
-                        if settings.isFallbackStorage {
-                            Label("Token saved — Keychain unavailable, using regular storage", systemImage: "exclamationmark.triangle.fill")
-                                .font(.footnote)
-                                .foregroundStyle(.orange)
-                        } else {
-                            Label("Token saved to Keychain", systemImage: "checkmark.shield.fill")
-                                .font(.footnote)
-                                .foregroundStyle(.green)
-                        }
-                    }
-
                     HStack {
                         Button("Save Token") { settings.saveToken() }
-                            .disabled(settings.token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                            .disabled(!tokenSet)
                         Spacer()
                         Button("Clear", role: .destructive) { settings.clearToken() }
                     }
@@ -137,6 +145,10 @@ struct SettingsView: View {
             get: { settings.country },
             set: { settings.selectCountry($0) }
         )
+    }
+
+    private var tokenSet: Bool {
+        !settings.token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 
