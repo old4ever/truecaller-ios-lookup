@@ -1,6 +1,16 @@
 modelRoles:
-  # default: kimi-code/kimi-k2.5
-  # advisor: kimi-code/k3-256k
-  default: openrouter/deepseek/deepseek-v4-flash-0731:high
-  task: openrouter/deepseek/deepseek-v4-flash-0731:max
-  smol: openrouter/deepseek/deepseek-v4-flash-0731:low
+  # default: openrouter/deepseek/deepseek-v4-flash-0731:high
+  # task: openrouter/deepseek/deepseek-v4-flash-0731:max
+  # smol: openrouter/deepseek/deepseek-v4-flash-0731:low
+  #
+  # default: kimi-code/k3-256k
+  # task: kimi-code/k3-256k
+  # smol: kimi-code/kimi-k2.5
+  #
+  # default: opencode-go/kimi-k3
+  # task: opencode-go/kimi-k3
+  # smol: opencode-go/kimi-k2.5
+  #
+  default: openai-codex/gpt-5.6-sol:medium
+  task: openai-codex/gpt-5.6-sol:max
+  smol: openai-codex/gpt-5.6-luna:low

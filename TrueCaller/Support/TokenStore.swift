@@ -34,7 +34,8 @@ enum TokenStore {
         if let value = KeychainStore.load() {
             return value
         }
-        return UserDefaults.standard.string(forKey: fallbackKey)
+        let fallback = UserDefaults.standard.string(forKey: fallbackKey)
+        return fallback
     }
 
     static func delete() {

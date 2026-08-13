@@ -4,7 +4,7 @@ import SwiftUI
 @MainActor
 final class SettingsStore: ObservableObject {
     @Published var token: String {
-        didSet { _ = oldValue; tokenIsSaved = false }
+        didSet { tokenIsSaved = false }
     }
     @Published var tokenIsSaved: Bool
     @Published var isFallbackStorage: Bool
@@ -62,15 +62,9 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    if tokenSet {
-                        Label("Token is set", systemImage: "checkmark.shield.fill")
+                    if settings.tokenIsSaved {
+                        Label("Token is saved", systemImage: "checkmark.shield.fill")
                             .foregroundStyle(.green)
-                    } else {
-                        Label("Token is not set", systemImage: "lock.open")
-                            .foregroundStyle(.secondary)
-                    }
-
-                    if tokenSet {
                         if settings.isFallbackStorage {
                             Label("Stored in app storage — Keychain unavailable", systemImage: "exclamationmark.triangle.fill")
                                 .font(.footnote)
@@ -80,6 +74,12 @@ struct SettingsView: View {
                                 .font(.footnote)
                                 .foregroundStyle(.green)
                         }
+                    } else if tokenSet {
+                        Label("Token has unsaved changes", systemImage: "pencil")
+                            .foregroundStyle(.orange)
+                    } else {
+                        Label("Token is not set", systemImage: "lock.open")
+                            .foregroundStyle(.secondary)
                     }
 
                     HStack {
@@ -95,13 +95,16 @@ struct SettingsView: View {
                         } label: {
                             Image(systemName: showToken ? "eye.slash" : "eye")
                         }
+                        .accessibilityLabel(showToken ? "Hide Token" : "Reveal Token")
                     }
 
                     HStack {
                         Button("Save Token") { settings.saveToken() }
                             .disabled(!tokenSet)
+                            .buttonStyle(.borderless)
                         Spacer()
                         Button("Clear", role: .destructive) { settings.clearToken() }
+                            .buttonStyle(.borderless)
                     }
                 } header: {
                     Text("Truecaller Token")
