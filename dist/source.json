@@ -10,7 +10,7 @@
       "developerName": "Dmytro Stanchiev",
       "subtitle": "Look up unknown callers",
       "localizedDescription": "Paste or type phone numbers to look them up against the Truecaller database: see the caller's name, location, carrier, spam status and report count. Add your Truecaller installationId token in Settings (stored only in Keychain). Numbers are looked up one at a time to stay within the API's rate limits.",
-      "iconURL": "__HOST__/icon.png",
+      "iconURL": "https://old4ever.github.io/truecaller-ios-lookup/icon.png",
       "tintColor": "#0F70F5",
       "category": "utilities",
       "versions": [
@@ -19,7 +19,7 @@
           "buildVersion": "3",
           "date": "2026-08-13",
           "localizedDescription": "First release.",
-          "downloadURL": "__HOST__/TrueCaller-1.0.ipa",
+          "downloadURL": "https://old4ever.github.io/truecaller-ios-lookup/TrueCaller-1.0.ipa",
           "size": 144979,
           "minOSVersion": "17.0"
         }
