@@ -1,0 +1,6 @@
+modelRoles:
+  # default: kimi-code/kimi-k2.5
+  # advisor: kimi-code/k3-256k
+  default: openrouter/deepseek/deepseek-v4-flash-0731:high
+  task: openrouter/deepseek/deepseek-v4-flash-0731:max
+  smol: openrouter/deepseek/deepseek-v4-flash-0731:low
