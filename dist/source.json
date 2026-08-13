@@ -16,11 +16,11 @@
       "versions": [
         {
           "version": "1.0",
-          "buildVersion": "3",
+          "buildVersion": "4",
           "date": "2026-08-13",
           "localizedDescription": "First release.",
           "downloadURL": "https://old4ever.github.io/truecaller-ios-lookup/TrueCaller-1.0.ipa",
-          "size": 144979,
+          "size": 145008,
           "minOSVersion": "17.0"
         }
       ],

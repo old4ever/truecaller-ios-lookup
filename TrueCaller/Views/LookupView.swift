@@ -20,9 +20,9 @@ struct LookupView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if settings.token.isEmpty {
+                    if !settings.tokenIsSaved {
                         banner(
-                            message: "No token yet — add your Truecaller installationId in Settings before looking up numbers.",
+                            message: "No saved token yet — add your Truecaller installationId in Settings and tap Save Token before looking up numbers.",
                             icon: "key.fill"
                         )
                     }
@@ -78,7 +78,7 @@ struct LookupView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            .disabled(settings.token.isEmpty || input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.status == .loading)
+            .disabled(!settings.tokenIsSaved || input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.status == .loading)
         }
         .padding()
         .background(Color(.secondarySystemGroupedBackground))
