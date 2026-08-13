@@ -1,12 +1,14 @@
 import SwiftUI
 
-/// App-wide settings backed by UserDefaults (country) and Keychain (token).
+/// App-wide settings backed by UserDefaults (country) and TokenStore (token).
 @MainActor
 final class SettingsStore: ObservableObject {
     @Published var token: String {
         didSet { _ = oldValue; tokenIsSaved = false }
     }
     @Published var tokenIsSaved: Bool
+    @Published var isFallbackStorage: Bool
+    @Published var errorMessage: String?
     @Published var country: Country
 
     private let countryKey = "defaultCountry"
@@ -14,33 +16,42 @@ final class SettingsStore: ObservableObject {
     init() {
         let stored = UserDefaults.standard.string(forKey: "defaultCountry")
         country = Country.all.first { $0.id == stored } ?? .default
-        token = KeychainStore.load() ?? ""
-        tokenIsSaved = KeychainStore.load() != nil
+        let loaded = TokenStore.load()
+        token = loaded ?? ""
+        tokenIsSaved = loaded != nil
+        isFallbackStorage = TokenStore.isUsingFallback
     }
 
     func saveToken() {
-        guard !token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        do {
-            try KeychainStore.save(token.trimmingCharacters(in: .whitespacesAndNewlines))
+        let value = token.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty else { return }
+        errorMessage = nil
+        let result = TokenStore.save(value)
+        if case .keychain = result {
             tokenIsSaved = true
-        } catch {
-            // Surface through the view's error state.
-            self.errorMessage = error.localizedDescription
+            isFallbackStorage = false
+        }
+        if case .userDefaults(let keychainError, let status) = result {
+            tokenIsSaved = true
+            isFallbackStorage = true
+            // Fallback still saved the token, so this is informational, not fatal.
+            let detail = keychainError?.errorDescription ?? (status.map { "Keychain error \($0)" } ?? "unknown")
+            self.errorMessage = "Keychain save failed (\(detail)); token stored with reduced security (regular storage). It will still work."
         }
     }
 
     func clearToken() {
-        KeychainStore.delete()
+        TokenStore.delete()
         token = ""
         tokenIsSaved = false
+        isFallbackStorage = false
+        errorMessage = nil
     }
 
     func selectCountry(_ c: Country) {
         country = c
         UserDefaults.standard.set(c.id, forKey: countryKey)
     }
-
-    var errorMessage: String?
 }
 
 struct SettingsView: View {
@@ -67,9 +78,15 @@ struct SettingsView: View {
                     }
 
                     if settings.tokenIsSaved && !settings.token.isEmpty {
-                        Label("Token saved to Keychain", systemImage: "checkmark.shield.fill")
-                            .font(.footnote)
-                            .foregroundStyle(.green)
+                        if settings.isFallbackStorage {
+                            Label("Token saved — Keychain unavailable, using regular storage", systemImage: "exclamationmark.triangle.fill")
+                                .font(.footnote)
+                                .foregroundStyle(.orange)
+                        } else {
+                            Label("Token saved to Keychain", systemImage: "checkmark.shield.fill")
+                                .font(.footnote)
+                                .foregroundStyle(.green)
+                        }
                     }
 
                     HStack {
@@ -81,7 +98,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Truecaller Token")
                 } footer: {
-                    Text("The token is your Truecaller installationId. It is stored only on this device, in the iOS Keychain, and is sent as the `Authorization: Bearer` header to search5-noneu.truecaller.com.")
+                    Text("The token is your Truecaller installationId. It is stored on this device (in the iOS Keychain when available, otherwise regular app storage) and is sent as the `Authorization: Bearer` header to search5-noneu.truecaller.com.")
                 }
 
                 if let message = settings.errorMessage {

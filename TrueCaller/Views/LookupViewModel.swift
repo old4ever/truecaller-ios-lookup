@@ -24,7 +24,7 @@ final class LookupViewModel: ObservableObject {
 
     /// Runs sequentially (like `tc.py`) to stay gentle on the rate limiter.
     func run(query: String, defaultCountry: Country) async {
-        let token = KeychainStore.load() ?? ""
+        let token = TokenStore.load() ?? ""
         guard !token.isEmpty else {
             records = [Record(number: "", entries: [], error: "No token configured. Open Settings and paste your Truecaller installationId.")]
             status = .done
