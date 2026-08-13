@@ -15,6 +15,7 @@ struct LookupView: View {
     @EnvironmentObject private var settings: SettingsStore
     @StateObject private var model = LookupViewModel()
     @State private var input = ""
+    @State private var contactDraft: ContactDraft?
 
     var body: some View {
         NavigationStack {
@@ -36,6 +37,9 @@ struct LookupView: View {
                 .padding()
             }
             .navigationTitle("Truecaller Lookup")
+        }
+        .sheet(item: $contactDraft) { draft in
+            ContactEditorView(draft: draft)
         }
     }
 
@@ -111,7 +115,9 @@ struct LookupView: View {
                             .foregroundStyle(.secondary)
                     } else {
                         ForEach(record.entries) { entry in
-                            EntryRow(entry: entry)
+                            EntryRow(entry: entry, queriedNumber: record.number) { draft in
+                                contactDraft = draft
+                            }
                         }
                     }
                 }
@@ -141,6 +147,8 @@ struct LookupView: View {
 
 private struct EntryRow: View {
     let entry: LookupEntry
+    let queriedNumber: String
+    let addToContacts: (ContactDraft) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -188,6 +196,20 @@ private struct EntryRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
+            }
+
+            if let draft = ContactDraft(entry: entry, queriedNumber: queriedNumber) {
+                Button {
+                    addToContacts(draft)
+                } label: {
+                    Label("Add to Contacts", systemImage: "person.crop.circle.badge.plus")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .padding(.top, 4)
+                .accessibilityLabel("Add to Contacts")
+                .accessibilityHint("Opens the new contact editor with this result prefilled")
+                .accessibilityIdentifier("add-to-contacts-\(entry.id)")
             }
         }
     }

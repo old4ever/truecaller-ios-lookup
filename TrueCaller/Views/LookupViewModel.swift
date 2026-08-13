@@ -22,6 +22,54 @@ final class LookupViewModel: ObservableObject {
 
     private let client = TruecallerClient()
 
+    init() {
+#if DEBUG
+        guard ProcessInfo.processInfo.arguments.contains("--ui-testing-contact-export-fixture") else { return }
+
+        let fixture = """
+        {
+          "data": [
+            {
+              "id": "fixture-api-phones",
+              "name": "Ada Fixture",
+              "phones": [
+                {
+                  "e164Format": "+1 416 555 0123",
+                  "nationalFormat": "(416) 555-0123",
+                  "numberType": "MOBILE"
+                },
+                {
+                  "e164Format": "+14165550123",
+                  "nationalFormat": "416-555-0123",
+                  "numberType": "mobile"
+                }
+              ]
+            },
+            {
+              "id": "fixture-query-fallback",
+              "name": "Fallback Fixture",
+              "phones": [
+                {
+                  "e164Format": "—",
+                  "nationalFormat": "unknown"
+                }
+              ]
+            }
+          ]
+        }
+        """
+
+        guard let data = fixture.data(using: .utf8),
+              let response = try? JSONDecoder().decode(LookupResponse.self, from: data) else {
+            assertionFailure("Invalid contact-export UI test fixture")
+            return
+        }
+
+        records = [Record(number: "+44 20 7946 0123", entries: response.data, error: nil)]
+        status = .done
+#endif
+    }
+
     /// Runs sequentially (like `tc.py`) to stay gentle on the rate limiter.
     func run(query: String, defaultCountry: Country) async {
         let token = TokenStore.load() ?? ""

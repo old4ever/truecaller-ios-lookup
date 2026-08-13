@@ -164,6 +164,7 @@ private struct AboutView: View {
 
                 GET /v2/search?q=<number>&countryCode=<cc>&type=4&encoding=json
 
+                Successful results can be reviewed and saved through Apple's native new-contact editor.
                 Use it responsibly: the unofficial API is rate-limited, and hammering it can extend a temporary throttle.
                 """)
             }

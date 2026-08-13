@@ -46,16 +46,16 @@ import json, sys
 base, ipa, size, ver, build = sys.argv[1:]
 src = {
   "name": "Dmytro's Sources",
-  "subtitle": "Unofficial Truecaller number lookup",
-  "description": "Look up unknown callers against the Truecaller database. Paste the numbers, get names, carrier and spam flags. Uses your own Truecaller installationId token.",
+  "subtitle": "Unofficial Truecaller lookup and contact export",
+  "description": "Look up unknown callers against the Truecaller database. Paste the numbers, get names, carrier and spam flags. Review successful results in Apple's new-contact editor and save them to Contacts. Uses your own Truecaller installationId token.",
   "tintColor": "#0F70F5",
   "apps": [
     {
       "name": "TrueCaller Lookup",
       "bundleIdentifier": "com.dmytrostanchiev.truecaller-lookup",
       "developerName": "Dmytro Stanchiev",
-      "subtitle": "Look up unknown callers",
-      "localizedDescription": "Paste or type phone numbers to look them up against the Truecaller database: see the caller's name, location, carrier, spam status and report count. Add your Truecaller installationId token in Settings (stored only in Keychain). Numbers are looked up one at a time to stay within the API's rate limits.",
+      "subtitle": "Look up callers and add contacts",
+      "localizedDescription": "Paste or type phone numbers to look them up against the Truecaller database: see the caller's name, location, carrier, spam status and report count. Review successful results in Apple's native new-contact editor and save them to Contacts. Add your Truecaller installationId token in Settings (stored on-device, using Keychain when available). Numbers are looked up one at a time to stay within the API's rate limits.",
       "iconURL": f"{base}/icon.png",
       "tintColor": "#0F70F5",
       "category": "utilities",
@@ -64,7 +64,7 @@ src = {
           "version": ver,
           "buildVersion": build,
           "date": "2026-08-13",
-          "localizedDescription": "First release.",
+          "localizedDescription": "First release: look up callers and add successful results to Contacts using Apple's native editor.",
           "downloadURL": f"{base}/{ipa}",
           "size": int(size),
           "minOSVersion": "17.0"
