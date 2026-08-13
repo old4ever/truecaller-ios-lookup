@@ -1,0 +1,34 @@
+{
+  "name": "Dmytro's Sources",
+  "subtitle": "Unofficial Truecaller lookup and contact export",
+  "description": "Look up unknown callers against the Truecaller database. Paste the numbers, get names, carrier and spam flags. Review successful results in Apple's new-contact editor and save them to Contacts. Uses your own Truecaller installationId token.",
+  "tintColor": "#0F70F5",
+  "apps": [
+    {
+      "name": "TrueCaller Lookup",
+      "bundleIdentifier": "com.dmytrostanchiev.truecaller-lookup",
+      "developerName": "Dmytro Stanchiev",
+      "subtitle": "Look up callers and add contacts",
+      "localizedDescription": "Paste or type phone numbers to look them up against the Truecaller database: see the caller's name, location, carrier, spam status and report count. Review successful results in Apple's native new-contact editor and save them to Contacts. Add your Truecaller installationId token in Settings (stored on-device, using Keychain when available). Numbers are looked up one at a time to stay within the API's rate limits.",
+      "iconURL": "https://old4ever.github.io/truecaller-ios-lookup/icon.png",
+      "tintColor": "#0F70F5",
+      "category": "utilities",
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "6",
+          "date": "2026-08-13",
+          "localizedDescription": "First release: look up callers and add successful results to Contacts using Apple's native editor.",
+          "downloadURL": "https://old4ever.github.io/truecaller-ios-lookup/TrueCaller-1.0.ipa",
+          "size": 173204,
+          "minOSVersion": "17.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    }
+  ],
+  "news": []
+}
